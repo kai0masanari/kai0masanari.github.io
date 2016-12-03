@@ -5,6 +5,10 @@
 	var init_dom_action, init_nodes, draw_function;
 	var get_distance;
 	
+	//const
+	var canvas_w = $( window ).width();
+	var canvas_h = $( window ).height();
+	
 	//varialbes
 	/*ばねモデル表示関連*/
 	var nodeObj = new Object(),
@@ -13,20 +17,21 @@
 		users = [], //コンテンツリスト
 		edges = [], //ノード間のリンク
 		nodes_img = []; //ノードのイメージ
+	var dragging = false;
 	
 	
 	
 	init_dom_action = function(){
-		$('#myCanvas').get(0).width = $( window ).width();
-		$('#myCanvas').get(0).height = $( window ).height();
+		$('#myCanvas').get(0).width = canvas_w;
+		$('#myCanvas').get(0).height = canvas_h;
 	}
 	
 	init_nodes = function(){
 		users = ["GitHub","About me","工事中"];
 		
-		nodeObj[0] =  {id: "GitHub", x: Math.floor(Math.random()*w), y: Math.floor(Math.random()*h), url: "https://github.com/kai0masanari", unchor: false, dx:0, dy:0};
-		nodeObj[1] =  {id: "About me", x: Math.floor(Math.random()*w), y: Math.floor(Math.random()*h), url: "", unchor: false, dx:0, dy:0};
-		nodeObj[1] =  {id: "工事中", x: Math.floor(Math.random()*w), y: Math.floor(Math.random()*h), url: "", unchor: false, dx:0, dy:0};
+		nodeObj["GitHub"] =  {id: "GitHub", x: Math.floor(Math.random()*canvas_w), y: Math.floor(Math.random()*canvas_h), url: "https://github.com/kai0masanari", img: "img/hakodock.png", dx:0, dy:0};
+		nodeObj["About me"] =  {id: "About me", x: Math.floor(Math.random()*canvas_w), y: Math.floor(Math.random()*canvas_h), url: "", img: "img/hakodock.png", dx:0, dy:0};
+		nodeObj["工事中"] =  {id: "工事中", x: Math.floor(Math.random()*canvas_w), y: Math.floor(Math.random()*canvas_h), url: "", img: "img/hakodock.png", dx:0, dy:0};
 		
 		nodes.push(nodeObj[0]);
 		nodes.push(nodeObj[0]);
@@ -40,7 +45,7 @@
 		'use strict'
 		
 		//functions
-		var	dras_nodes, draw_stroke, node_relax;
+		var	draw_nodes, draw_stroke, node_relax;
 		
 		//const
 		var node_width = 100;
@@ -50,9 +55,13 @@
 		var coulomb = 680;
 		var gravity = 0.04;
 		
-		drawGraphics = function(){
+		//varibales
+		var canvas = $('#myCanvas').get(0);
+		var canvasCtx = canvas.getContext('2d');
+		
+		var drawGraphics = function(){
 			//clean
-			canvasCtx.clearRect(0, 0, $( window ).width(), $( window ).width());
+			canvasCtx.clearRect(0, 0, canvas_w, canvas_h);
 		
 			//draw forcelayout
 			draw_stroke();
@@ -85,13 +94,15 @@
 					var width,
 						height;
 						
-					nodes_img[users[i]].src = "img/hakodock.png";
+					//nodes_img[users[i]].src = "img/hakodock.png";
+					var img = new Image();
+					img.src = nodeObj[users[i]].img;
 					width = node_width;
 					height = node_width;
 						
 					canvasCtx.font = "20px 'Arial'";
 					canvasCtx.fillText(nodeObj[users[i]].id.slice(0,5), nodeObj[users[i]].x+width,nodeObj[users[i]].y);
-					canvasCtx.drawImage(nodes_img[users[i]], nodeObj[users[i]].x, nodeObj[users[i]].y, width, height);
+					canvasCtx.drawImage(img, nodeObj[users[i]].x, nodeObj[users[i]].y, width, height);
 				}
 			}
 		}
@@ -129,8 +140,8 @@
 				
 					//gravity : node - central
 					var distX_c=0,distY_c=0;
-					distX_c = w/2 - (nodeObj[users[i]].x + node_width/2);
-					distY_c = h/2 - (nodeObj[users[i]].y + node_width/2);
+					distX_c = canvas_w/2 - (nodeObj[users[i]].x + node_width/2);
+					distY_c = canvas_h/2 - (nodeObj[users[i]].y + node_width/2);
 					fx += gravity *distX_c;
 					fy += gravity *distY_c;
 				
@@ -174,15 +185,91 @@
 		setInterval(drawGraphics, 50);
 	}
 	
+	function onDouble(e){
+		if(users.length != 0){
+			for(var i=0; i<users.length; i=(i+1)|0){
+				var i_width;
+				var i_height;
+				if(nodeObj[users[i]].type){
+					i_width = hu_width;
+					i_height = hu_height;
+				}else{
+					i_width = en_width;
+					i_height = en_height;
+				}
+				console.log(i_width);
+				if((e.pageX > nodeObj[users[i]].x && e.pageX < nodeObj[users[i]].x+i_width) &&
+					(e.pageY > nodeObj[users[i]].y && e.pageY < nodeObj[users[i]].y+i_height)){
+					/*
+					if(nodeObj[users[i]].unchor){
+						nodeObj[users[i]].unchor = false;
+					}else{
+						nodeObj[users[i]].unchor = true;
+					}*/
+					break;
+				}
+			}
+		}
+	}
+
+	//クリックイベント2
+	function onDown(e){
+		console.log("onDowned");	
 	
+		if(users.length != 0){
+			for(var i=0; i<users.length; i=(i+1)|0){
+				var i_width;
+				var i_height;
+				if(nodeObj[users[i]].type){
+					i_width = hu_width;
+					i_height = hu_height;
+				}else{
+					i_width = en_width;
+					i_height = en_height;
+				}
+			
+				if((e.offsetX > nodeObj[users[i]].x && e.offsetX < nodeObj[users[i]].x+i_width) &&
+					(e.offsetY > nodeObj[users[i]].y && e.offsetY < nodeObj[users[i]].y+i_height)){
+					dragging_name = users[i];
+					dragging = true;
+					console.log("hoge");
+					break;
+				}
+			}
+		}
+	}
+
+	//ドラッグイベント
+	function onMove(e){
+		if(dragging){
+			var i_width;
+			var i_height;
+			if(nodeObj[dragging_name].type){
+				i_width = hu_width;
+				i_height = hu_height;
+			}else{
+				i_width = en_width;
+				i_height = en_height;
+			}
+			nodeObj[dragging_name].x = e.offsetX-i_width/2;
+			nodeObj[dragging_name].y = e.offsetY-i_height/2;	
+		}
+	}
+
+	//ドラッグ終了イベント
+	function onUp(e){
+		dragging = false;
+	}
+		
+		
 	//get distance between two points
 	get_distance = function(c_position_x, c_position_y, b_position_x, b_position_y){
 		var distance = Math.sqrt(Math.pow(c_position_x - b_position_x, 2)+Math.pow(c_position_y - b_position_y, 2));
 		return distance; 
 	}
+
 	
-	
-	
+	init_nodes();
 	init_dom_action();
 	draw_function();
 }
