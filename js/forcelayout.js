@@ -8,6 +8,7 @@
 	//const
 	var canvas_w = $( window ).width();
 	var canvas_h = $( window ).height();
+	var node_width = 100;
 	
 	//varialbes
 	/*ばねモデル表示関連*/
@@ -17,7 +18,9 @@
 		users = [], //コンテンツリスト
 		edges = [], //ノード間のリンク
 		nodes_img = []; //ノードのイメージ
-	var dragging = false;
+	var dragging = false,
+		dragging_name = "";
+	
 	
 	
 	
@@ -48,7 +51,6 @@
 		var	draw_nodes, draw_stroke, node_relax;
 		
 		//const
-		var node_width = 100;
 		var distance = 300;
 		var bounce = 0.08;
 		var attenuation = 0.7;
@@ -101,7 +103,7 @@
 					height = node_width;
 						
 					canvasCtx.font = "20px 'Arial'";
-					canvasCtx.fillText(nodeObj[users[i]].id.slice(0,5), nodeObj[users[i]].x+width,nodeObj[users[i]].y);
+					canvasCtx.fillText(nodeObj[users[i]].id, nodeObj[users[i]].x+width,nodeObj[users[i]].y);
 					canvasCtx.drawImage(img, nodeObj[users[i]].x, nodeObj[users[i]].y, width, height);
 				}
 			}
@@ -218,15 +220,8 @@
 	
 		if(users.length != 0){
 			for(var i=0; i<users.length; i=(i+1)|0){
-				var i_width;
-				var i_height;
-				if(nodeObj[users[i]].type){
-					i_width = hu_width;
-					i_height = hu_height;
-				}else{
-					i_width = en_width;
-					i_height = en_height;
-				}
+				var i_width = node_width,
+					i_height = node_width;
 			
 				if((e.offsetX > nodeObj[users[i]].x && e.offsetX < nodeObj[users[i]].x+i_width) &&
 					(e.offsetY > nodeObj[users[i]].y && e.offsetY < nodeObj[users[i]].y+i_height)){
@@ -242,15 +237,9 @@
 	//ドラッグイベント
 	function onMove(e){
 		if(dragging){
-			var i_width;
-			var i_height;
-			if(nodeObj[dragging_name].type){
-				i_width = hu_width;
-				i_height = hu_height;
-			}else{
-				i_width = en_width;
-				i_height = en_height;
-			}
+			var i_width = node_width,
+				i_height = node_width;
+
 			nodeObj[dragging_name].x = e.offsetX-i_width/2;
 			nodeObj[dragging_name].y = e.offsetY-i_height/2;	
 		}
