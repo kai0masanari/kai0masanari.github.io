@@ -190,16 +190,9 @@
 	function onDouble(e){
 		if(users.length != 0){
 			for(var i=0; i<users.length; i=(i+1)|0){
-				var i_width;
-				var i_height;
-				if(nodeObj[users[i]].type){
-					i_width = hu_width;
-					i_height = hu_height;
-				}else{
-					i_width = en_width;
-					i_height = en_height;
-				}
-				console.log(i_width);
+				var i_width = node_width,
+					i_height = node_width;
+					
 				if((e.pageX > nodeObj[users[i]].x && e.pageX < nodeObj[users[i]].x+i_width) &&
 					(e.pageY > nodeObj[users[i]].y && e.pageY < nodeObj[users[i]].y+i_height)){
 					/*
@@ -208,6 +201,7 @@
 					}else{
 						nodeObj[users[i]].unchor = true;
 					}*/
+					window.location.href = nodeObj[users[i]].url;
 					break;
 				}
 			}
