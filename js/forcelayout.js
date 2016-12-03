@@ -1,19 +1,48 @@
 ﻿var main = function (){
 	'use strict'
-	var init_dom_action, draw_function;
+	
+	//functions
+	var init_dom_action, init_nodes, draw_function;
 	var get_distance;
+	
+	//varialbes
+	/*ばねモデル表示関連*/
+	var nodeObj = new Object(),
+		linkObj = new Object();
+	var nodes = [], //nodeObjを格納する配列
+		users = [], //コンテンツリスト
+		edges = [], //ノード間のリンク
+		nodes_img = []; //ノードのイメージ
 	
 	
 	
 	init_dom_action = function(){
-		$( '#myCanvas' ).get( 0 ).width = $( window ).width();
-		$( '#myCanvas' ).get( 0 ).height = $( window ).height();
+		$('#myCanvas').get(0).width = $( window ).width();
+		$('#myCanvas').get(0).height = $( window ).height();
+	}
+	
+	init_nodes = function(){
+		users = ["GitHub","About me","工事中"];
+		
+		nodeObj[0] =  {id: "GitHub", x: Math.floor(Math.random()*w), y: Math.floor(Math.random()*h), url: "https://github.com/kai0masanari", unchor: false, dx:0, dy:0};
+		nodeObj[1] =  {id: "About me", x: Math.floor(Math.random()*w), y: Math.floor(Math.random()*h), url: "", unchor: false, dx:0, dy:0};
+		nodeObj[1] =  {id: "工事中", x: Math.floor(Math.random()*w), y: Math.floor(Math.random()*h), url: "", unchor: false, dx:0, dy:0};
+		
+		nodes.push(nodeObj[0]);
+		nodes.push(nodeObj[0]);
+		nodes.push(nodeObj[0]);
+		
+		linkObj[0] = {from: "GitHub", to: "About me", len: 0, group: true}
+		edges.push(linkObj[0]);
 	}
 	
 	draw_function = function(){
 		'use strict'
+		
+		//functions
 		var	dras_nodes, draw_stroke, node_relax;
 		
+		//const
 		var node_width = 100;
 		var distance = 300;
 		var bounce = 0.08;
@@ -22,7 +51,7 @@
 		var gravity = 0.04;
 		
 		drawGraphics = function(){
-			//draw reset
+			//clean
 			canvasCtx.clearRect(0, 0, $( window ).width(), $( window ).width());
 		
 			//draw forcelayout
@@ -51,7 +80,6 @@
 		}
 	
 		draw_nodes = function(){
-			//draw nodes
 			if(nodes.length != 0){
 				for(var i=0; i<users.length; i=(i+1)|0){
 					var width,
@@ -141,9 +169,9 @@
 		canvas.addEventListener('mousemove', onMove, false);
 		canvas.addEventListener('mouseup', onUp, false);
 		canvas.addEventListener('dblclick', onDouble, false);
+		
 	
 		setInterval(drawGraphics, 50);
-		
 	}
 	
 	
@@ -156,6 +184,7 @@
 	
 	
 	init_dom_action();
+	draw_function();
 }
 
 
