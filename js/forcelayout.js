@@ -16,8 +16,7 @@
 		linkObj = new Object();
 	var nodes = [], //nodeObjを格納する配列
 		users = [], //コンテンツリスト
-		edges = [], //ノード間のリンク
-		nodes_img = []; //ノードのイメージ
+		edges = []; //ノード間のリンク
 	var dragging = false,
 		dragging_name = "";
 	
