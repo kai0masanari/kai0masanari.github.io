@@ -195,12 +195,6 @@
 					
 				if((e.pageX > nodeObj[users[i]].x && e.pageX < nodeObj[users[i]].x+i_width) &&
 					(e.pageY > nodeObj[users[i]].y && e.pageY < nodeObj[users[i]].y+i_height)){
-					/*
-					if(nodeObj[users[i]].unchor){
-						nodeObj[users[i]].unchor = false;
-					}else{
-						nodeObj[users[i]].unchor = true;
-					}*/
 					window.location.href = nodeObj[users[i]].url;
 					break;
 				}
@@ -209,8 +203,7 @@
 	}
 
 	//クリックイベント2
-	function onDown(e){
-		console.log("onDowned");	
+	function onDown(e){	
 	
 		if(users.length != 0){
 			for(var i=0; i<users.length; i=(i+1)|0){
@@ -221,7 +214,7 @@
 					(e.offsetY > nodeObj[users[i]].y && e.offsetY < nodeObj[users[i]].y+i_height)){
 					dragging_name = users[i];
 					dragging = true;
-					console.log("hoge");
+
 					break;
 				}
 			}
