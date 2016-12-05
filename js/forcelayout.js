@@ -93,10 +93,9 @@
 			if(nodes.length != 0){
 				for(var i=0; i<users.length; i=(i+1)|0){
 					var width,
-						height;
-						
-					//nodes_img[users[i]].src = "img/hakodock.png";
-					var img = new Image();
+						height,
+						img = new Image();
+					
 					img.src = nodeObj[users[i]].img;
 					width = node_width;
 					height = node_width;
