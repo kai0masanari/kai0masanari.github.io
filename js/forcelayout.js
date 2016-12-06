@@ -50,11 +50,11 @@
 		var	draw_nodes, draw_stroke, node_relax;
 		
 		//const
-		var distance = 300;
-		var bounce = 0.08;
-		var attenuation = 0.7;
-		var coulomb = 680;
-		var gravity = 0.04;
+		const distance = 300;
+		const bounce = 0.08;
+		const attenuation = 0.7;
+		const coulomb = 680;
+		const gravity = 0.04;
 		
 		//varibales
 		var canvas = $('#myCanvas').get(0);
